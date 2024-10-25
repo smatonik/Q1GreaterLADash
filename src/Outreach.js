@@ -84,21 +84,22 @@ const ProgramMetricsDashboard = () => {
     );
   };
 
-  const renderExitLabel = ({ value }) => {
+  const renderExitLabel = ({ x, y, width, height, value }) => {
     if (value === null || value === undefined || value === 0) return null;
     return (
-      <text
-        x={value.x + value.width / 2}  // Horizontal center of the segment
-        y={value.y + value.height / 2} // Vertical center of the segment
-        fill="#666666"
-        textAnchor="middle"
+      <text 
+        x={x + width / 2}   // Position the label in the center of the bar segment
+        y={y + height / 2}  // Position it vertically in the middle of the segment
+        fill="#666666" 
+        textAnchor="middle" 
         dominantBaseline="middle"
         style={{ fontSize: '11px', fontWeight: 'bold' }}
       >
-        {`${value.toFixed(1)}%`}  // Show individual percentage
+        {`${value.toFixed(1)}%`}  // Display the individual percentage for this segment
       </text>
     );
   };
+
 
   const CustomLegend = (props) => {
     const { payload } = props;
