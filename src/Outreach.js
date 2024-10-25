@@ -159,4 +159,75 @@ const ProgramMetricsDashboard = () => {
               <Tooltip formatter={(value) => `${value}%`} />
               <Legend content={<CustomLegend />} />
               <ReferenceLine y={85} stroke="#000" strokeDasharray="3 3" />
-              <Bar dataKey="threeDay"
+              <Bar dataKey="threeDay" name="Served within 3 days" fill="#86efac" label={renderCustomBarLabel} />
+              <Bar dataKey="sevenDay" name="Served within 7 days" fill="#bbf7d0" label={renderCustomBarLabel} />
+            </BarChart>
+          </div>
+        </TabPanel>
+
+        <TabPanel>
+          <div className="mb-8 bg-white rounded-lg shadow-sm p-6">
+            <h2 className="text-xl font-semibold mb-4">Data Quality</h2>
+            <BarChart {...chartProps} data={dataQualityData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
+              <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
+              <Tooltip formatter={(value) => `${value}%`} />
+              <Legend content={<CustomLegend />} />
+              <ReferenceLine y={98} stroke="#000" strokeDasharray="3 3" />
+              <Bar dataKey="personal" name="Personal Data Quality" fill="#86efac" label={renderCustomBarLabel} />
+              <Bar dataKey="universal" name="Universal Data Quality" fill="#bbf7d0" label={renderCustomBarLabel} />
+            </BarChart>
+          </div>
+        </TabPanel>
+
+        <TabPanel>
+          <div className="mb-8 bg-white rounded-lg shadow-sm p-6">
+            <h2 className="text-xl font-semibold mb-4">Income Increases</h2>
+            <BarChart {...chartProps} data={incomeData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="value" fill="#86efac" label={renderCustomBarLabel} />
+            </BarChart>
+          </div>
+        </TabPanel>
+
+        <TabPanel>
+          <div className="mb-8 bg-white rounded-lg shadow-sm p-6">
+            <h2 className="text-xl font-semibold mb-4">Participants Engaged</h2>
+            <BarChart {...chartProps} data={participationData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
+              <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
+              <Tooltip formatter={(value) => `${value}%`} />
+              <ReferenceLine y={80} stroke="#000" strokeDasharray="3 3" />
+              <Bar dataKey="value" fill="#86efac" label={renderCustomBarLabel} />
+            </BarChart>
+          </div>
+        </TabPanel>
+
+        <TabPanel>
+          <div className="mb-8 bg-white rounded-lg shadow-sm p-6">
+            <h2 className="text-xl font-semibold mb-4">Exit Destinations</h2>
+            <BarChart {...chartProps} data={exitsData} layout="vertical">
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis type="number" domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
+              <YAxis type="category" dataKey="name" width={150} tick={{ fill: "#666666" }} />
+              <Tooltip formatter={(value) => `${value}%`} />
+              <Legend content={<CustomLegend />} />
+              <Bar dataKey="permanent" name="Permanent Exits" stackId="a" fill="#86efac" label={renderExitLabel} />
+              <Bar dataKey="nonPermPositive" name="Other Positive Exits" stackId="a" fill="#bbf7d0" label={renderExitLabel} />
+              <Bar dataKey="other" name="Other Exits" stackId="a" fill="#e2e8f0" label={renderExitLabel} />
+              <Bar dataKey="homeless" name="Exits to Homelessness" stackId="a" fill="#fecaca" label={renderExitLabel} />
+            </BarChart>
+          </div>
+        </TabPanel>
+
+      </Tabs>
+    </div>
+  );
+};
+
+export default ProgramMetricsDashboard;
