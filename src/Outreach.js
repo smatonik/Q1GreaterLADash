@@ -84,18 +84,18 @@ const ProgramMetricsDashboard = () => {
     );
   };
 
-  const renderExitLabel = ({ x, y, width, height, value }) => {
+  const renderExitLabel = ({ value }) => {
     if (value === null || value === undefined || value === 0) return null;
     return (
-      <text 
-        x={x + width/2}
-        y={y + height/2}
-        fill="#666666" 
+      <text
+        x={value.x + value.width / 2}  // Horizontal center of the segment
+        y={value.y + value.height / 2} // Vertical center of the segment
+        fill="#666666"
         textAnchor="middle"
         dominantBaseline="middle"
         style={{ fontSize: '11px', fontWeight: 'bold' }}
       >
-        {`${value.toFixed(1)}%`}
+        {`${value.toFixed(1)}%`}  // Show individual percentage
       </text>
     );
   };
