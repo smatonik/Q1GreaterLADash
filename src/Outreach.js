@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, Label } from 'recharts';
 
 const ProgramMetricsDashboard = () => {
   const chartProps = {
@@ -9,16 +8,13 @@ const ProgramMetricsDashboard = () => {
     margin: { top: 30, right: 120, left: 200, bottom: 90 }
   };
 
-  const enrollmentData = [
-    { name: 'Agency Overall', served: 16462, enrollments: 5441 },
-    { name: 'Outreach Overall', served: 5632, enrollments: 2670 },
-    { name: 'Venice Outreach', served: 59, enrollments: 20 },
-    { name: 'LAX Outreach', served: 73, enrollments: 44 },
-    { name: 'Street Outreach CD5', served: 132, enrollments: 32 },
-    { name: 'DHS MDT SPA 7', served: 717, enrollments: 280 },
-    { name: 'SPA 7 PATH Public Spaces', served: 98, enrollments: 32 }
+  const participantCountsData = [
+    { name: 'Venice Outreach', served: 59, enrolled: 20 },
+    { name: 'LAX Outreach', served: 73, enrolled: 44 },
+    { name: 'Street Outreach CD5', served: 132, enrolled: 32 },
+    { name: 'DHS MDT SPA 7', served: 717, enrolled: 280 },
+    { name: 'SPA 7 PATH Public Spaces', served: 98, enrolled: 32 }
   ];
-
 
   const housingData = [
     { name: 'Venice Outreach', value: 10 },
@@ -91,13 +87,14 @@ const ProgramMetricsDashboard = () => {
         dominantBaseline="middle"
         style={{ fontSize: '12px', fontWeight: 'bold' }}
       >
-        {typeof value === 'number' ? (Number.isInteger(value) ? value : ${value.toFixed(1)}%) : value}
+        {typeof value === 'number' ? (Number.isInteger(value) ? value : `${value.toFixed(1)}%`) : value}
       </text>
     );
   };
 
-  const renderExitLabel = ({ x, y, width, height, value }) => {
-    if (value === null || value === undefined || value === 0) return null;
+  const renderExitLabel = ({ x, y, width, height, payload, dataKey }) => {
+    if (!payload || !payload[dataKey] || payload[dataKey] === 0) return null;
+    
     return (
       <text 
         x={x + width/2}
@@ -107,7 +104,7 @@ const ProgramMetricsDashboard = () => {
         dominantBaseline="middle"
         style={{ fontSize: '11px', fontWeight: 'bold' }}
       >
-        {${value.toFixed(1)}%}
+        {`${payload[dataKey].toFixed(1)}%`}
       </text>
     );
   };
@@ -117,7 +114,7 @@ const ProgramMetricsDashboard = () => {
     return (
       <div style={{ paddingTop: "60px", display: "flex", justifyContent: "center", gap: "20px" }}>
         {payload.map((entry, index) => (
-          <span key={legend-${index}} style={{ display: "flex", alignItems: "center", marginRight: "10px" }}>
+          <span key={`legend-${index}`} style={{ display: "flex", alignItems: "center", marginRight: "10px" }}>
             <span style={{ 
               display: "inline-block", 
               width: "10px", 
@@ -135,22 +132,20 @@ const ProgramMetricsDashboard = () => {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-8 text-center">SPA 5, 7, & 8 Outreach</h1>
-
-      {/* New chart for Persons Served and New Enrollments */}
+      
       <div className="mb-8 bg-white rounded-lg shadow-sm p-6">
-        <h2 className="text-xl font-semibold mb-4">Persons Served and New Enrollments</h2>
-        <BarChart width={1200} height={400} data={enrollmentData}>
+        <h2 className="text-xl font-semibold mb-4">Participant Counts</h2>
+        <BarChart {...chartProps} data={participantCountsData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
           <YAxis />
           <Tooltip />
-          <Legend />
-          <Bar dataKey="served" name="Persons Served" fill="#86efac" />
-          <Bar dataKey="enrollments" name="New Enrollments" fill="#bbf7d0" />
+          <Legend content={<CustomLegend />} />
+          <Bar dataKey="served" name="Persons Served" fill="#86efac" label={renderCustomBarLabel} />
+          <Bar dataKey="enrolled" name="New Enrollments" fill="#bbf7d0" label={renderCustomBarLabel} />
         </BarChart>
       </div>
 
-    
       <div className="mb-8 bg-white rounded-lg shadow-sm p-6">
         <h2 className="text-xl font-semibold mb-4">Total Permanent Housing Placements</h2>
         <BarChart {...chartProps} data={housingData}>
@@ -167,10 +162,12 @@ const ProgramMetricsDashboard = () => {
         <BarChart {...chartProps} data={responseTimeData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
-          <YAxis domain={[0, 100]} tickFormatter={(value) => ${value}%} />
-          <Tooltip formatter={(value) => ${value}%} />
+          <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
+          <Tooltip formatter={(value) => `${value}%`} />
           <Legend content={<CustomLegend />} />
-          <ReferenceLine y={85} stroke="#000" strokeDasharray="3 3" />
+          <ReferenceLine y={85} stroke="#000" strokeDasharray="3 3">
+            <Label value="Target (85%)" position="right" fill="#666666" />
+          </ReferenceLine>
           <Bar dataKey="threeDay" name="Served within 3 days" fill="#86efac" label={renderCustomBarLabel} />
           <Bar dataKey="sevenDay" name="Served within 7 days" fill="#bbf7d0" label={renderCustomBarLabel} />
         </BarChart>
@@ -181,10 +178,12 @@ const ProgramMetricsDashboard = () => {
         <BarChart {...chartProps} data={dataQualityData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
-          <YAxis domain={[0, 100]} tickFormatter={(value) => ${value}%} />
-          <Tooltip formatter={(value) => ${value}%} />
+          <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
+          <Tooltip formatter={(value) => `${value}%`} />
           <Legend content={<CustomLegend />} />
-          <ReferenceLine y={98} stroke="#000" strokeDasharray="3 3" />
+          <ReferenceLine y={98} stroke="#000" strokeDasharray="3 3">
+            <Label value="Target (98%)" position="right" fill="#666666" />
+          </ReferenceLine>
           <Bar dataKey="personal" name="Personal Data Quality" fill="#86efac" label={renderCustomBarLabel} />
           <Bar dataKey="universal" name="Universal Data Quality" fill="#bbf7d0" label={renderCustomBarLabel} />
         </BarChart>
@@ -206,9 +205,11 @@ const ProgramMetricsDashboard = () => {
         <BarChart {...chartProps} data={participationData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
-          <YAxis domain={[0, 100]} tickFormatter={(value) => ${value}%} />
-          <Tooltip formatter={(value) => ${value}%} />
-          <ReferenceLine y={80} stroke="#000" strokeDasharray="3 3" />
+          <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
+          <Tooltip formatter={(value) => `${value}%`} />
+          <ReferenceLine y={80} stroke="#000" strokeDasharray="3 3">
+            <Label value="Target (80%)" position="right" fill="#666666" />
+          </ReferenceLine>
           <Bar dataKey="value" fill="#86efac" label={renderCustomBarLabel} />
         </BarChart>
       </div>
@@ -217,9 +218,9 @@ const ProgramMetricsDashboard = () => {
         <h2 className="text-xl font-semibold mb-4">Exit Destinations</h2>
         <BarChart {...chartProps} data={exitsData} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis type="number" domain={[0, 100]} tickFormatter={(value) => ${value}%} />
+          <XAxis type="number" domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
           <YAxis type="category" dataKey="name" width={150} tick={{ fill: "#666666" }} />
-          <Tooltip formatter={(value) => ${value}%} />
+          <Tooltip formatter={(value) => `${value}%`} />
           <Legend content={<CustomLegend />} />
           <Bar dataKey="permanent" name="Permanent Exits" stackId="a" fill="#86efac" label={renderExitLabel} />
           <Bar dataKey="nonPermPositive" name="Other Positive Exits" stackId="a" fill="#bbf7d0" label={renderExitLabel} />
