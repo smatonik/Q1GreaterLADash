@@ -1,4 +1,6 @@
 import React from 'react';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine } from 'recharts';
 
 const ProgramMetricsDashboard = () => {
@@ -123,85 +125,38 @@ const ProgramMetricsDashboard = () => {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-8 text-center">SPA 5, 7, & 8 Outreach</h1>
-      
-      <div className="mb-8 bg-white rounded-lg shadow-sm p-6">
-        <h2 className="text-xl font-semibold mb-4">Total Permanent Housing Placements</h2>
-        <BarChart {...chartProps} data={housingData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
-          <YAxis />
-          <Tooltip />
-          <Bar dataKey="value" fill="#86efac" label={renderCustomBarLabel} />
-        </BarChart>
-      </div>
 
-      <div className="mb-8 bg-white rounded-lg shadow-sm p-6">
-        <h2 className="text-xl font-semibold mb-4">Service Response Time</h2>
-        <BarChart {...chartProps} data={responseTimeData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
-          <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
-          <Tooltip formatter={(value) => `${value}%`} />
-          <Legend content={<CustomLegend />} />
-          <ReferenceLine y={85} stroke="#000" strokeDasharray="3 3" />
-          <Bar dataKey="threeDay" name="Served within 3 days" fill="#86efac" label={renderCustomBarLabel} />
-          <Bar dataKey="sevenDay" name="Served within 7 days" fill="#bbf7d0" label={renderCustomBarLabel} />
-        </BarChart>
-      </div>
+      <Tabs>
+        <TabList>
+          <Tab>Housing Placements</Tab>
+          <Tab>Service Response Time</Tab>
+          <Tab>Data Quality</Tab>
+          <Tab>Income Increases</Tab>
+          <Tab>Participants Engaged</Tab>
+          <Tab>Exit Destinations</Tab>
+        </TabList>
 
-      <div className="mb-8 bg-white rounded-lg shadow-sm p-6">
-        <h2 className="text-xl font-semibold mb-4">Data Quality</h2>
-        <BarChart {...chartProps} data={dataQualityData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
-          <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
-          <Tooltip formatter={(value) => `${value}%`} />
-          <Legend content={<CustomLegend />} />
-          <ReferenceLine y={98} stroke="#000" strokeDasharray="3 3" />
-          <Bar dataKey="personal" name="Personal Data Quality" fill="#86efac" label={renderCustomBarLabel} />
-          <Bar dataKey="universal" name="Universal Data Quality" fill="#bbf7d0" label={renderCustomBarLabel} />
-        </BarChart>
-      </div>
+        <TabPanel>
+          <div className="mb-8 bg-white rounded-lg shadow-sm p-6">
+            <h2 className="text-xl font-semibold mb-4">Total Permanent Housing Placements</h2>
+            <BarChart {...chartProps} data={housingData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="value" fill="#86efac" label={renderCustomBarLabel} />
+            </BarChart>
+          </div>
+        </TabPanel>
 
-      <div className="mb-8 bg-white rounded-lg shadow-sm p-6">
-        <h2 className="text-xl font-semibold mb-4">Income Increases</h2>
-        <BarChart {...chartProps} data={incomeData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
-          <YAxis />
-          <Tooltip />
-          <Bar dataKey="value" fill="#86efac" label={renderCustomBarLabel} />
-        </BarChart>
-      </div>
-
-      <div className="mb-8 bg-white rounded-lg shadow-sm p-6">
-        <h2 className="text-xl font-semibold mb-4">Participants Engaged</h2>
-        <BarChart {...chartProps} data={participationData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
-          <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
-          <Tooltip formatter={(value) => `${value}%`} />
-          <ReferenceLine y={80} stroke="#000" strokeDasharray="3 3" />
-          <Bar dataKey="value" fill="#86efac" label={renderCustomBarLabel} />
-        </BarChart>
-      </div>
-
-      <div className="mb-8 bg-white rounded-lg shadow-sm p-6">
-        <h2 className="text-xl font-semibold mb-4">Exit Destinations</h2>
-        <BarChart {...chartProps} data={exitsData} layout="vertical">
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis type="number" domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
-          <YAxis type="category" dataKey="name" width={150} tick={{ fill: "#666666" }} />
-          <Tooltip formatter={(value) => `${value}%`} />
-          <Legend content={<CustomLegend />} />
-          <Bar dataKey="permanent" name="Permanent Exits" stackId="a" fill="#86efac" label={renderExitLabel} />
-          <Bar dataKey="nonPermPositive" name="Other Positive Exits" stackId="a" fill="#bbf7d0" label={renderExitLabel} />
-          <Bar dataKey="other" name="Other Exits" stackId="a" fill="#e2e8f0" label={renderExitLabel} />
-          <Bar dataKey="homeless" name="Exits to Homelessness" stackId="a" fill="#fecaca" label={renderExitLabel} />
-        </BarChart>
-      </div>
-    </div>
-  );
-};
-
-export default ProgramMetricsDashboard;
+        <TabPanel>
+          <div className="mb-8 bg-white rounded-lg shadow-sm p-6">
+            <h2 className="text-xl font-semibold mb-4">Service Response Time</h2>
+            <BarChart {...chartProps} data={responseTimeData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
+              <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
+              <Tooltip formatter={(value) => `${value}%`} />
+              <Legend content={<CustomLegend />} />
+              <ReferenceLine y={85} stroke="#000" strokeDasharray="3 3" />
+              <Bar dataKey="threeDay"
